@@ -4,11 +4,15 @@ from os import listdir
 import json
 import re
 from sql import adduser, getusers, clear, geturl, getfirebasetomcu
+from werkzeug.utils import secure_filename
 
 app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
+UPLOAD_FOLDER = 'static'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+file_name = ''
 
 def getprojectname(url):
 	p = r'//(.*)\.firebaseio'
@@ -26,7 +30,7 @@ def take(): # calling this function and changing url
 	return render_template('takeinput.html')
 
 @app.route('/takeinput', methods=["GET", "POST"])
-def takk():
+def takk(): # to accept url of firebase
 	print('/takeinput')
 	global file_name
 	url = request.form['firebaseurl']
@@ -36,19 +40,34 @@ def takk():
 	return '<h1 style="color:green">Added Successfully..!</h1>'
 
 @app.route("/upload", methods=["GET", "POST"])
-def upload():
+def upload():  # to accept json file | file uploader
 	print('/upload')
 	global file_name
-	try:
-		url = request.form['firebaseurl']
-		# print(f'Firebase URL : {url}')
-	except Exception as e:
-		print(e)
+
 	target = os.path.join(APP_ROOT, 'static')
 	# print(f'Target : {target}')
 
 	if not os.path.isdir(target):
 		os.mkdir(target)
+	
+	if request.method =='POST':
+		file = request.files['file']
+		if file:
+			filename = secure_filename(file.filename)
+			file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
+			return redirect(url_for('take'))
+	return 'Some thing Wrong Happened File not found may be'
+
+	# try:
+	# 	url = request.form['firebaseurl']
+	# 	# print(f'Firebase URL : {url}')
+	# except Exception as e:
+	# 	print(e)
+	# target = os.path.join(APP_ROOT, 'static')
+	# # print(f'Target : {target}')
+
+	# if not os.path.isdir(target):
+	# 	os.mkdir(target)
             
 	for file in request.files.getlist("file"):
 		filename = file.filename
