@@ -13,21 +13,21 @@ class ListenerClass:
 		self.appname = appname
 
 	def listener(self, event):
-	    print(event.event_type)  # can be 'put' or 'patch'
-	    print(event.path)  # relative to the reference, it seems
-	    print(event.data)  # new data at /reference/event.path. None if deleted
-	    print(self.appname) # Extra data related to change add your own member variable
+	    # print(event.event_type)  # can be 'put' or 'patch'
+	    # print(event.path)  # relative to the reference, it seems
+	    # print(event.data)  # new data at /reference/event.path. None if deleted
+	    # print(self.appname) # Extra data related to change add your own member variable
 
 	    path = str(event.path)
 	    data = str(event.data)
 	    if '{' not in data:
 	    	result = "{'" + path[1:] + "': '" + data + "'}"
-	    	print(f'Updating this one : {result}')
+	    	# print(f'Updating this one : {result}')
 	    	updatefirebasetomcu(self.appname, result)
 	    else:
 	    	updatefirebasetomcu(self.appname, data)
-	    	print(f'Updating this on First time : ')
-	    	print(data)
+	    	# print(f'Updating this on First time : ')
+	    	# print(data)
 # /:{'motor': 'on', 'n0': 'hello MCU'}
 # /motor:off   # after one data change
 def update(appname,data, path):
@@ -43,16 +43,16 @@ def update(appname,data, path):
 
 def addtofirebase(json_path, url, data, path):
 	global objects, count, details
-	print(f'JSON PATH : {json_path}')
-	print(f'URL : {url}')
-	print(f'Readings : {data}')
+	# print(f'JSON PATH : {json_path}')
+	# print(f'URL : {url}')
+	# print(f'Readings : {data}')
 	
 	p = r'//(.*)\.firebaseio'
 	x = re.findall(p, url)
-	print(x[0])
+	# print(x[0])
 	my_app_name = x[0]
 	xyz = {'databaseURL': 'https://{}.firebaseio.com'.format(my_app_name),'storageBucket': '{}.appspot.com'.format(my_app_name)}
-	print(f'No of Objects : {len(objects)}')
+	# print(f'No of Objects : {len(objects)}')
 	if my_app_name not in firebase_admin._apps:
 		cred = credentials.Certificate(json_path)        
 		obj = firebase_admin.initialize_app(cred,xyz , name=my_app_name)
@@ -62,8 +62,8 @@ def addtofirebase(json_path, url, data, path):
 		update(objects[details[my_app_name]], data, path)
 		listenerObject = ListenerClass(my_app_name)
 		db.reference('sendbacktomcu', app= obj).listen(listenerObject.listener)
-		print('reference sucess!')
+		# print('reference sucess!')
 	else:
 		update(objects[details[my_app_name]], data, path)
 
-	print(f'No of Objects : {len(objects)}')	
+	print(f'No of Existing Connections : {len(objects)}')	

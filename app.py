@@ -17,7 +17,8 @@ def getprojectname(url):
 
 @app.route("/")
 def index():
-    return render_template("upload.html")
+	print('/')
+	return render_template("upload.html")
 
 
 @app.route('/takeinput')
@@ -26,30 +27,32 @@ def take(): # calling this function and changing url
 
 @app.route('/takeinput', methods=["GET", "POST"])
 def takk():
+	print('/takeinput')
 	global file_name
 	url = request.form['firebaseurl']
-	print(file_name + '\n' + url)
+	# print(file_name + '\n' + url)
 	adduser(getprojectname(url), file_name.split('.')[0], url, 'Added Just Now!')
-	print(getusers())
+	# print(getusers())
 	return '<h1 style="color:green">Added Successfully..!</h1>'
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():
+	print('/upload')
 	global file_name
 	try:
 		url = request.form['firebaseurl']
-		print(f'Firebase URL : {url}')
+		# print(f'Firebase URL : {url}')
 	except Exception as e:
 		print(e)
 	target = os.path.join(APP_ROOT, 'static')
-	print(f'Target : {target}')
+	# print(f'Target : {target}')
 
 	if not os.path.isdir(target):
 		os.mkdir(target)
             
 	for file in request.files.getlist("file"):
 		filename = file.filename
-		print(f'File : {filename}')
+		# print(f'File : {filename}')
 		file_name = filename
 		file.save(os.path.join(target, filename))
 	return redirect(url_for('take'))
