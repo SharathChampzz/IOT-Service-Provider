@@ -1,20 +1,16 @@
 import os
 from flask import Flask, request, render_template, url_for, redirect
 from os import listdir
-
 import json
-
+import re
 from sql import adduser, getusers, clear, geturl, getfirebasetomcu
 
 app = Flask(__name__)
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
-prev_json = ''
-file_name = ''
 
 
 def getprojectname(url):
-	import re
 	p = r'//(.*)\.firebaseio'
 	x = re.findall(p, url)
 	return x[0]
@@ -62,7 +58,7 @@ def upload():
 def mcutopython(jsonno, path,readings):
 	try:
 		s = jsonno + '/' + path + '/' + readings
-		# print(s)
+		print(f'Requesting URL : {s}')
 		json_path = os.path.join(os.path.join(APP_ROOT, 'static'), jsonno + '.json')
 		# url = 'https://fyp-healthapp-project.firebaseio.com/'
 		url = geturl(jsonno)
