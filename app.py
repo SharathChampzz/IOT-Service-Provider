@@ -69,12 +69,12 @@ def upload():  # to accept json file | file uploader
 	# if not os.path.isdir(target):
 	# 	os.mkdir(target)
             
-	for file in request.files.getlist("file"):
-		filename = file.filename
-		# print(f'File : {filename}')
-		file_name = filename
-		file.save(os.path.join(target, filename))
-	return redirect(url_for('take'))
+	# for file in request.files.getlist("file"):
+	# 	filename = file.filename
+	# 	# print(f'File : {filename}')
+	# 	file_name = filename
+	# 	file.save(os.path.join(target, filename))
+	# return redirect(url_for('take'))
 
 @app.route('/<jsonno>/<path>/<readings>') 
 def mcutopython(jsonno, path,readings):
