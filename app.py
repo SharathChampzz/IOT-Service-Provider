@@ -22,22 +22,27 @@ def getprojectname(url):
 @app.route("/")
 def index():
 	print('/')
-	return render_template("upload.html")
+	return render_template("uploader.html") # upload to uploader
 
 
-@app.route('/takeinput')
+@app.route('/takeurl')
 def take(): # calling this function and changing url
-	return render_template('takeinput.html')
+	return render_template('takeurl.html') # /takeinput to /takeurl
 
-@app.route('/takeinput', methods=["GET", "POST"])
+@app.route('/takeurl', methods=["GET", "POST"]) # /takeinput to /takeurl
 def takk(): # to accept url of firebase
-	print('/takeinput')
+	print('/takeurl')
 	global file_name
 	url = request.form['firebaseurl']
-	# print(file_name + '\n' + url)
+
+	print(f'Filename or JSOn Name : {file_name}')
+	print(f'URL  : {url}')
+
+	print(file_name + '\n' + url)
 	adduser(getprojectname(url), file_name.split('.')[0], url, 'Added Just Now!')
 	# print(getusers())
-	return '<h1 style="color:green">Added Successfully..!</h1>'
+	# return '<h1 style="color:green">Added Successfully..!</h1>'
+	return render_template('sucess.html')
 
 @app.route("/upload", methods=["GET", "POST"])
 def upload():  # to accept json file | file uploader
@@ -54,27 +59,12 @@ def upload():  # to accept json file | file uploader
 		file = request.files['file']
 		if file:
 			filename = secure_filename(file.filename)
+			print(filename)
+			file_name = filename
 			file.save(os.path.join(app.config['UPLOAD_FOLDER'],filename))
 			return redirect(url_for('take'))
 	return 'Some thing Wrong Happened File not found may be'
 
-	# try:
-	# 	url = request.form['firebaseurl']
-	# 	# print(f'Firebase URL : {url}')
-	# except Exception as e:
-	# 	print(e)
-	# target = os.path.join(APP_ROOT, 'static')
-	# # print(f'Target : {target}')
-
-	# if not os.path.isdir(target):
-	# 	os.mkdir(target)
-            
-	# for file in request.files.getlist("file"):
-	# 	filename = file.filename
-	# 	# print(f'File : {filename}')
-	# 	file_name = filename
-	# 	file.save(os.path.join(target, filename))
-	# return redirect(url_for('take'))
 
 @app.route('/<jsonno>/<path>/<readings>') 
 def mcutopython(jsonno, path,readings):

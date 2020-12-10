@@ -81,7 +81,7 @@ def updatefirebasetomcu(projectname, data):
 
 # updatefirebasetomcu('fyp-healthapp-project', 'send this data to MCU')
 # # adduser('projectname', 'efgh','fttp', 'firebasetomcu')
-# print(getusers())
+print(getusers())
 # print(getfirebasetomcu('projectname'))
 # clear()
 # print(getusers())
