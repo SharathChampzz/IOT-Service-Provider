@@ -99,7 +99,7 @@ def mcutopython(jsonno, path,readings):
 
 
 if __name__ == "__main__":
-    app.run(port=4555, debug=True, threaded=True)
+    app.run(port=4555, debug=False, threaded=True)
 
 #this will execute on app close
 # conn.commit()
